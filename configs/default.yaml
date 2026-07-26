@@ -1,0 +1,30 @@
+choke:
+  cd: 0.82
+  exponent: 0.65
+  max_area: 0.00028
+  stroke_time: 15.0
+fluid:
+  density: 645.0
+  gor: 120.0
+  viscosity: 0.012
+  water_cut: 0.0
+reservoir:
+  pressure: 217.0
+  productivity_index: 1200.0
+  temperature: 90.0
+  volume: 35000000.0
+simulation:
+  dt: 1.0
+  duration: 3600.0
+surface:
+  ambient_temperature: 30.0
+  flowline_coefficient: 250000.0
+  flowline_time_constant: 15.0
+  separator_pressure: 20.0
+  temperature_time_constant: 100.0
+well:
+  depth: 3000.0
+  friction_coefficient: 500.0
+  tubing_diameter: 0.1
+  tubing_length: 3000.0
+  wellbore_time_constant: 45.0
