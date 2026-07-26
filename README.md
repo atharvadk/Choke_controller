@@ -178,39 +178,53 @@ Evaluation across 12-hour simulation horizons ($dt = 5.0\text{s}$, $8,640\text{ 
 
 ## 📊 Real-time Dashboard
 
-A real-time dashboard for visualizing the choke control simulation is available in the `dashboard/` directory.
+An interactive real-time dashboard for visualizing the choke control simulation is available in the `dashboard/` directory. The dashboard uses graphical controls to adjust simulation parameters, eliminating the need for command-line arguments.
 
 ### Features
 
-- Real-time plots of choke opening, oil rate, wellhead pressure, bottom hole pressure, reservoir pressure, and choke command.
-- Live statistics display.
-- Dynamic axis scaling.
-- Support for all five controllers: Fixed, Rule-Based, PID, MPC, and RL.
+- Interactive controller selection via radio buttons (Fixed, Rule-Based, PID, MPC, RL)
+- Adjustable parameters through text boxes: duration, time step, target oil rate, minimum wellhead pressure, update interval
+- Start/Stop buttons to control simulation execution
+- Real-time plots of:
+  - Choke opening (%)
+  - Oil rate (bbl/hr) with target reference line
+  - Wellhead pressure (psi) with safety limit line
+  - Bottom hole pressure (psi)
+  - Reservoir pressure (bar)
+  - Choke command (%)
+- Live statistics display showing current values
+- Dynamic axis scaling that adapts to data ranges
+- Support for all five control strategies
 
 ### Usage
 
 Run the dashboard from the project root:
 
 ```bash
-python3 dashboard/dashboard.py --controller pid --duration 3600 --dt 1.0
+python3 dashboard/dashboard.py
 ```
 
-#### Arguments
+### Controls
 
-- `--controller`: Type of controller (`fixed`, `rule_based`, `pid`, `mpc`, `rl`). Default: `pid`.
-- `--duration`: Simulation duration in seconds (default: 3600).
-- `--dt`: Simulation time step in seconds (default: 1.0).
-- `--target_oil`: Target oil rate in bbl/hr (default: 100).
-- `--min_whp`: Minimum wellhead pressure safety limit in psi (default: 210).
-- `--update_interval`: Update plot every N simulation steps (default: 1).
+1. **Controller Selection**: Use the radio buttons to choose between Fixed, Rule-Based, PID, MPC, or RL controllers.
+2. **Parameters**: Set the desired values using the text boxes:
+   - **Duration (s)**: Total simulation time
+   - **dt (s)**: Time step size
+   - **Target Oil (bbl/hr)**: Desired oil production rate
+   - **Min WHP (psi)**: Minimum allowed wellhead pressure (safety constraint)
+   - **Update Interval**: Number of simulation steps between plot updates (higher = better performance, less smooth)
+3. **Start Simulation**: Click the "Start Simulation" button to begin.
+4. **Stop Simulation**: Click the "Stop" button to halt the simulation at any time.
+5. **Adjust During Operation**: You can modify most parameters while the simulation is running; changes take effect after you restart the script.
 
-### Example
+### Example Workflow
 
-Run a 2-hour simulation with the RL controller and 5-second timestep:
-
-```bash
-python3 dashboard/dashboard.py --controller rl --duration 7200 --dt 5.0
-```
+1. Launch the dashboard with the command above.
+2. Select "RL" as the controller.
+3. Set Duration to 7200 (2 hours), dt to 5.0, Target Oil to 120, and Min WHP to 210.
+4. Click "Start Simulation".
+5. Observe the real-time updates as the RL controller learns to control the choke.
+6. Experiment with different controllers and parameters to compare performance.
 
 See the [dashboard README](dashboard/README.md) for more details.
 
