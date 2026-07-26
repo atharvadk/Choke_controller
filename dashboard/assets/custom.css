@@ -1,0 +1,15 @@
+/* Custom tweaks for the Dash dashboard */
+body {
+    background-color: #1e1e1f;
+    color: #f8f9fa;
+}
+.card {
+    background-color: #2b2b2c !important;
+    border-color: #495057 !important;
+}
+.btn {
+    border-radius: .3rem;
+}
+.badge {
+    font-size: 0.85rem;
+}

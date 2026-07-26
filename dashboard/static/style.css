@@ -1,0 +1,438 @@
+/* Single-Screen 2-Page Dashboard for Autonomous Choke Control System */
+
+:root {
+  --bg-dark: #0f172a;
+  --bg-card: #1e293b;
+  --bg-card-hover: #334155;
+  --bg-input: #0f172a;
+
+  --border-color: #334155;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+
+  --cyan: #38bdf8;
+  --emerald: #34d399;
+  --amber: #fbbf24;
+  --rose: #f87171;
+  --indigo: #818cf8;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-size: 13px;
+}
+
+/* Main App Grid - 280px Left Sidebar + 1fr Main Content */
+.app-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Left Sidebar */
+.sidebar {
+  background: #111827;
+  border-right: 1px solid var(--border-color);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.brand-box {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-main);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.brand-box i {
+  color: var(--cyan);
+}
+
+/* Navigation Page Tabs */
+.nav-tabs {
+  display: flex;
+  background: var(--bg-card);
+  padding: 0.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.nav-tab-btn {
+  flex: 1;
+  padding: 0.5rem 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.nav-tab-btn.active {
+  background: var(--cyan);
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* Section Title */
+.sidebar-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-top: 0.2rem;
+}
+
+/* Controller Select Buttons */
+.controller-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.ctrl-chip {
+  padding: 0.55rem 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.15s ease;
+}
+
+.ctrl-chip:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-main);
+}
+
+.ctrl-chip.active {
+  background: var(--cyan);
+  color: #0f172a;
+  border-color: transparent;
+  font-weight: 700;
+}
+
+/* Playback Control Bar */
+.playback-bar {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn:hover {
+  background: var(--bg-card-hover);
+}
+
+.btn-primary {
+  background: var(--cyan);
+  color: #0f172a;
+  border: none;
+  font-weight: 700;
+}
+
+.btn-primary:hover {
+  background: #0284c7;
+  color: #fff;
+}
+
+.btn-danger {
+  background: var(--rose);
+  color: #fff;
+  border: none;
+}
+
+/* Form Controls */
+.param-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  background: var(--bg-card);
+  padding: 0.85rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+}
+
+.field-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.field-val {
+  color: var(--cyan);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+}
+
+.range-slider {
+  width: 100%;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--bg-dark);
+  accent-color: var(--cyan);
+  cursor: pointer;
+}
+
+.num-input {
+  background: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  width: 65px;
+  text-align: right;
+}
+
+/* Main Viewport Workspace */
+.main-viewport {
+  height: 100vh;
+  overflow: hidden;
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-view {
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
+.page-view.active {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Page 1: Live Simulation Layout */
+.page1-layout {
+  display: grid;
+  grid-template-columns: 310px 1fr;
+  gap: 0.75rem;
+  height: 100%;
+}
+
+/* Center Column: Stats + Well Schematic */
+.center-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  height: 100%;
+}
+
+.stats-grid-compact {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.stat-card-compact {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.stat-val {
+  font-size: 1.25rem;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.stat-sub {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+}
+
+.schematic-card {
+  flex: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.schematic-box {
+  flex: 1;
+  width: 100%;
+  background: #090d16;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Right Column: 4 Charts (2x2 Grid) */
+.charts-grid-fit {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0.75rem;
+  height: 100%;
+}
+
+.chart-card-fit {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  height: 100%;
+  overflow: hidden;
+}
+
+.chart-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.chart-canvas-wrapper {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Page 2: Monte Carlo Scenarios Viewport */
+.scenario-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-card);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+}
+
+.scenario-select {
+  background: var(--bg-dark);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  outline: none;
+  font-weight: 600;
+}
+
+.mc-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.mc-charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.table-wrapper {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 0.75rem;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+
+.data-table th, .data-table td {
+  padding: 0.45rem 0.6rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.data-table th {
+  color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+}
+
+.data-table td {
+  font-family: 'JetBrains Mono', monospace;
+}

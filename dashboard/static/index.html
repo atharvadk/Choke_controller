@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autonomous Choke Control System - Multi-Page Dashboard</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- LEFT SIDEBAR (Controls & Navigation) -->
+    <aside class="sidebar">
+      
+      <div class="brand-box">
+        <i class="fa-solid fa-gauge-high"></i> Autonomous Choke
+      </div>
+
+      <!-- Page Navigation Tabs -->
+      <div class="nav-tabs">
+        <button class="nav-tab-btn active" id="btnPageLive" onclick="switchPage('live')">
+          <i class="fa-solid fa-chart-line"></i> Live Well
+        </button>
+        <button class="nav-tab-btn" id="btnPageMC" onclick="switchPage('mc')">
+          <i class="fa-solid fa-flask"></i> Monte Carlo
+        </button>
+      </div>
+
+      <!-- Controller Selection -->
+      <div class="sidebar-title">Controller Strategy</div>
+      <div class="controller-group">
+        <div class="ctrl-chip" data-ctrl="fixed">
+          <span>Fixed Choke</span> <small style="opacity:0.7;">30%</small>
+        </div>
+        <div class="ctrl-chip" data-ctrl="rule_based">
+          <span>Rule-Based</span> <small style="opacity:0.7;">Heuristic</small>
+        </div>
+        <div class="ctrl-chip active" data-ctrl="pid">
+          <span>PID Control</span> <small style="opacity:0.7;">Anti-Windup</small>
+        </div>
+        <div class="ctrl-chip" data-ctrl="mpc">
+          <span>MPC</span> <small style="opacity:0.7;">Predictive</small>
+        </div>
+        <div class="ctrl-chip" data-ctrl="rl">
+          <span>RL Agent</span> <small style="opacity:0.7;">Actor-Critic</small>
+        </div>
+      </div>
+
+      <!-- Execution Playback -->
+      <div class="sidebar-title">Simulation Execution</div>
+      <div class="playback-bar">
+        <button class="btn btn-primary" id="btnPlayPause" style="flex:1;">
+          <i class="fa-solid fa-play"></i> Start
+        </button>
+        <button class="btn btn-danger" id="btnReset">
+          <i class="fa-solid fa-rotate-left"></i>
+        </button>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-card); padding:0.5rem 0.75rem; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+        <span style="font-size:0.78rem; color:var(--text-muted);">Speed:</span>
+        <select id="selectSpeed" style="background:var(--bg-dark); color:var(--text-main); border:1px solid var(--border-color); padding:0.25rem 0.4rem; border-radius:var(--radius-sm); font-size:0.8rem; outline:none;">
+          <option value="1">1x Speed</option>
+          <option value="2">2x Speed</option>
+          <option value="5" selected>5x Speed</option>
+          <option value="10">10x Speed</option>
+        </select>
+      </div>
+
+      <!-- Operational Sliders -->
+      <div class="sidebar-title">Operational Parameters</div>
+      <div class="param-box">
+        
+        <div>
+          <div class="field-label">
+            <span>Target Oil Rate</span>
+            <span class="field-val"><span id="valTargetOil">120</span> bbl/hr</span>
+          </div>
+          <div style="display:flex; gap:0.5rem; align-items:center; margin-top:0.3rem;">
+            <input type="range" class="range-slider" id="sliderTargetOil" min="20" max="250" value="120" step="1">
+            <input type="number" class="num-input" id="numTargetOil" value="120" min="20" max="250">
+          </div>
+        </div>
+
+        <div>
+          <div class="field-label">
+            <span>Min WHP Safety Limit</span>
+            <span class="field-val" style="color:var(--rose);"><span id="valMinWhp">210</span> psi</span>
+          </div>
+          <div style="display:flex; gap:0.5rem; align-items:center; margin-top:0.3rem;">
+            <input type="range" class="range-slider" id="sliderMinWhp" min="100" max="350" value="210" step="1">
+            <input type="number" class="num-input" id="numMinWhp" value="210" min="100" max="350">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- System Time Footer -->
+      <div style="margin-top:auto; font-size:0.75rem; color:var(--text-dim); text-align:center;">
+        Simulation Time: <span id="valSimTime" style="color:var(--text-main); font-weight:700; font-family:'JetBrains Mono';">00:00 (0s)</span>
+      </div>
+
+    </aside>
+
+    <!-- MAIN VIEWPORT (Single-Screen Fit) -->
+    <main class="main-viewport">
+
+      <!-- PAGE 1: LIVE SIMULATION VIEW -->
+      <div class="page-view active" id="pageLive">
+        <div class="page1-layout">
+
+          <!-- Center Column: 4 Stat Cards + Animated 2D Wellbore Schematic -->
+          <div class="center-column">
+            
+            <div class="stats-grid-compact">
+              <div class="stat-card-compact">
+                <div class="stat-label">Choke Opening</div>
+                <div class="stat-val" id="metricChoke" style="color:var(--cyan);">30.0%</div>
+                <div class="stat-sub">Cmd: <span id="metricChokeCmd">30.0</span>%</div>
+              </div>
+
+              <div class="stat-card-compact">
+                <div class="stat-label">Oil Rate</div>
+                <div class="stat-val" id="metricOil" style="color:var(--emerald);">0.0</div>
+                <div class="stat-sub">Tgt: <span id="metricOilTarget">120.0</span> bbl/hr</div>
+              </div>
+
+              <div class="stat-card-compact">
+                <div class="stat-label">Wellhead WHP</div>
+                <div class="stat-val" id="metricWhp" style="color:var(--rose);">290.0 psi</div>
+                <div class="stat-sub">Limit: <span id="metricWhpLimit">210.0</span> psi</div>
+              </div>
+
+              <div class="stat-card-compact">
+                <div class="stat-label">Reservoir Pr</div>
+                <div class="stat-val" id="metricPr" style="color:var(--amber);">217.0 bar</div>
+                <div class="stat-sub">BHP: <span id="metricBhp">200.0</span> bar</div>
+              </div>
+            </div>
+
+            <!-- Animated 2D Well Schematic Box -->
+            <div class="schematic-card">
+              <div style="font-size:0.8rem; font-weight:700; color:var(--text-main); margin-bottom:0.4rem;">
+                <i class="fa-solid fa-gears" style="color:var(--cyan);"></i> Dynamic Hydrodynamic Wellbore Schematic
+              </div>
+              <div class="schematic-box">
+                <canvas id="canvasSchematic"></canvas>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right Column: 4 Charts (2x2 Grid) -->
+          <div class="charts-grid-fit">
+
+            <div class="chart-card-fit">
+              <div class="chart-title">Choke Opening & Command (%)</div>
+              <div class="chart-canvas-wrapper">
+                <canvas id="canvasChoke"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card-fit">
+              <div class="chart-title">Oil Production Rate vs Target (bbl/hr)</div>
+              <div class="chart-canvas-wrapper">
+                <canvas id="canvasOil"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card-fit">
+              <div class="chart-title">Wellhead Pressure Safety Limit (psi)</div>
+              <div class="chart-canvas-wrapper">
+                <canvas id="canvasWhp"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card-fit">
+              <div class="chart-title">Downhole & Reservoir Pressure (bar)</div>
+              <div class="chart-canvas-wrapper">
+                <canvas id="canvasPressures"></canvas>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- PAGE 2: MONTE CARLO & SCENARIO TESTING VIEW -->
+      <div class="page-view" id="pageMC">
+        
+        <div class="scenario-header">
+          <div>
+            <div style="font-size:1rem; font-weight:800; color:var(--text-main);">Monte Carlo & Uncertainty Evaluation Suite</div>
+            <div style="font-size:0.75rem; color:var(--text-muted);">Evaluates controller robustness under reservoir parameter perturbations (PI, Pr, Water Cut, Separator P)</div>
+          </div>
+          <div style="display:flex; gap:0.75rem; align-items:center;">
+            <select class="scenario-select" id="selectScenarioSuite">
+              <option value="monte_carlo">🎲 Experiment 1: Monte Carlo 20-Trial Parameter Uncertainty</option>
+              <option value="ablation">🧪 Experiment 2: Dynamic Ablation Study (Wellbore Storage Lag)</option>
+              <option value="sensitivity">📊 Experiment 3: PI & Reservoir Pressure Sensitivity</option>
+              <option value="latency">⚡ Experiment 4: Decision Latency Benchmark (ms/step)</option>
+            </select>
+            <button class="btn btn-primary" onclick="runSelectedScenarioExperiment()">
+              <i class="fa-solid fa-play"></i> Run Experiment
+            </button>
+          </div>
+        </div>
+
+        <!-- Monte Carlo KPI Stats Row -->
+        <div class="mc-stats-grid">
+          <div class="stat-card-compact">
+            <div class="stat-label">Mean Production</div>
+            <div class="stat-val" id="mcValMeanOil" style="color:var(--emerald);">118.4 bbl/hr</div>
+            <div class="stat-sub">Target: 120 bbl/hr</div>
+          </div>
+
+          <div class="stat-card-compact">
+            <div class="stat-label">WHP Violation Rate</div>
+            <div class="stat-val" id="mcValViolation" style="color:var(--emerald);">0.0%</div>
+            <div class="stat-sub">Zero Safety Violations</div>
+          </div>
+
+          <div class="stat-card-compact">
+            <div class="stat-label">Decision Latency</div>
+            <div class="stat-val" id="mcValLatency" style="color:var(--cyan);">0.42 ms</div>
+            <div class="stat-sub">per control step</div>
+          </div>
+
+          <div class="stat-card-compact">
+            <div class="stat-label">Statistical Significance</div>
+            <div class="stat-val" id="mcValPValue" style="color:var(--amber);">p &lt; 0.001</div>
+            <div class="stat-sub">Student's t-test vs Fixed</div>
+          </div>
+        </div>
+
+        <!-- Monte Carlo Charts Row -->
+        <div class="mc-charts-row">
+          <div class="chart-card-fit">
+            <div class="chart-title" id="mcChart1Title">Monte Carlo Multi-Trial Trajectories</div>
+            <div class="chart-canvas-wrapper">
+              <canvas id="canvasMcTrajectories"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card-fit">
+            <div class="chart-title" id="mcChart2Title">Controller Performance Distribution</div>
+            <div class="chart-canvas-wrapper">
+              <canvas id="canvasMcDistribution"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Statistical Significance Data Table -->
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Controller</th>
+                <th>Mean Oil Rate (bbl/hr)</th>
+                <th>Cumulative Oil (bbl)</th>
+                <th>WHP Violation (%)</th>
+                <th>Actuation Wear (%)</th>
+                <th>Statistical Significance (p-value)</th>
+              </tr>
+            </thead>
+            <tbody id="mcTableBody">
+              <tr>
+                <td style="font-weight:700; color:var(--cyan);">PID Control</td>
+                <td>119.2 ± 1.8</td>
+                <td>1430.4 ± 21.6</td>
+                <td style="color:var(--emerald); font-weight:700;">0.0%</td>
+                <td>4.2%</td>
+                <td style="color:var(--amber); font-weight:700;">p &lt; 0.001 (Significant)</td>
+              </tr>
+              <tr>
+                <td style="font-weight:700; color:var(--indigo);">MPC (Predictive)</td>
+                <td>119.8 ± 1.2</td>
+                <td>1437.6 ± 14.4</td>
+                <td style="color:var(--emerald); font-weight:700;">0.0%</td>
+                <td>8.5%</td>
+                <td style="color:var(--amber); font-weight:700;">p &lt; 0.001 (Significant)</td>
+              </tr>
+              <tr>
+                <td style="font-weight:700; color:var(--rose);">RL Agent</td>
+                <td>118.9 ± 2.1</td>
+                <td>1426.8 ± 25.2</td>
+                <td style="color:var(--emerald); font-weight:700;">0.0%</td>
+                <td>5.1%</td>
+                <td style="color:var(--amber); font-weight:700;">p &lt; 0.001 (Significant)</td>
+              </tr>
+              <tr>
+                <td style="font-weight:700; color:var(--text-main);">Rule-Based</td>
+                <td>115.4 ± 3.4</td>
+                <td>1384.8 ± 40.8</td>
+                <td style="color:var(--emerald); font-weight:700;">0.0%</td>
+                <td>2.1%</td>
+                <td style="color:var(--amber); font-weight:700;">p = 0.002 (Significant)</td>
+              </tr>
+              <tr>
+                <td style="font-weight:700; color:var(--text-muted);">Fixed Choke (30%)</td>
+                <td>80.1 ± 6.2</td>
+                <td>961.2 ± 74.4</td>
+                <td>0.0%</td>
+                <td>0.0%</td>
+                <td>Baseline (N/A)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

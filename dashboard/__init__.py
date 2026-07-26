@@ -1,5 +1,7 @@
-"""Dashboard package for Autonomous Choke Control System."""
+"""
+Dashboard package.
+"""
 
-from .dashboard import ChokeDashboard
+from .dashboard_mpl import ChokeDashboard
 
-__all__ = ['ChokeDashboard']
+__all__ = ["ChokeDashboard"]

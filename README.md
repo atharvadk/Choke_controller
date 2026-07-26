@@ -2,15 +2,14 @@
 
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Physics Fidelity](https://img.shields.io/badge/physics--fidelity-reduced--order%20twin-orange.svg)](#system-architecture)
 
-An industrial-grade, reduced-order physics digital twin and controller benchmarking platform for **Autonomous Production Choke Control** in oil and gas wells. The simulator models coupled reservoir inflow (IPR), wellbore hydraulics, choke orifice dynamics, flowline backpressure, and dynamic fluid storage lag ($\tau_{\text{well}}$).
+A reduced-order physics digital twin and controller benchmarking platform for Autonomous Production Choke Control in oil and gas wells. The simulator models coupled reservoir inflow (IPR), wellbore hydraulics, choke orifice dynamics, flowline backpressure, and dynamic fluid storage lag.
 
-Includes 5 control strategies: **Fixed Choke**, **Rule-Based Heuristic**, **Industrial PID with Anti-Windup**, **Non-Linear Model Predictive Control (NMPC)**, and an **Actor-Critic Reinforcement Learning (RL) Agent**.
+Includes 5 control strategies: Fixed Choke, Rule-Based Heuristic, Industrial PID with Anti-Windup, Non-Linear Model Predictive Control (NMPC), and an Actor-Critic Reinforcement Learning (RL) Agent.
 
 ---
 
-## 📸 System Architecture & Overview
+## System Architecture & Overview
 
 ```text
                ┌────────────────────────────────────────────────────────┐
@@ -32,19 +31,19 @@ Includes 5 control strategies: **Fixed Choke**, **Rule-Based Heuristic**, **Indu
            └─────────────────────────────┬─────────────────────────────┘
                                          │
                                          ▼
-                              ┌─────────────────────────────┐
-                              │  BENCHMARK & AUDIT SUITE    │
-                              ├─────────────────────────────┤
-                              │ • Reference Calibration     │
-                              │ • Monte Carlo Trials (N=20) │
-                              │ • Constraint Audit (WHP)    │
-                              │ • Physics Ablation Study    │
-                              └─────────────────────────────┘
+                               ┌─────────────────────────────┐
+                               │  BENCHMARK & AUDIT SUITE    │
+                               ├─────────────────────────────┤
+                               │ • Reference Calibration     │
+                               │ • Monte Carlo Trials (N=20) │
+                               │ • Constraint Audit (WHP)    │
+                               │ • Physics Ablation Study    │
+                               └─────────────────────────────┘
 ```
 
 ---
 
-## 🚀 Quick Start & Installation
+## Quick Start & Installation
 
 ### 1. Clone & Setup Environment
 
@@ -69,11 +68,11 @@ To run the complete end-to-end dataset calibration, RL training, 5-controller be
 python3 run_all_benchmarks.py
 ```
 
-*This command generates all figures in `plots/`, model weights in `models/`, and prints complete statistical metrics to the console.*
+This command generates all figures in `plots/`, model weights in `models/`, and prints statistical metrics to the console.
 
 ---
 
-## 💻 Example Python Usage
+## Example Python Usage
 
 ### Running the Simulator & PID Controller
 
@@ -103,37 +102,37 @@ for t in range(3600):
 
 ---
 
-## 📊 Benchmark Performance Results
+## Benchmark Performance Results
 
 Evaluation across 12-hour simulation horizons ($dt = 5.0\text{s}$, $8,640\text{ steps}$ per scenario):
 
 | Scenario | Control Strategy | Cum. Oil Produced | Tracking Error (IAE) | Choke Wear ($\sum \|\Delta u\|$) | Min WHP Recorded | Solver Converged |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Scenario A** | Fixed Choke (30%) | $945.1\text{ bbl}$ | $493.0\text{ bbl}\cdot\text{h}$ | $0.0\%$ | $305.2\text{ psi}$ | **True** |
-| *(Step Setpoints)* | Rule-Based | $1203.4\text{ bbl}$ | $234.7\text{ bbl}\cdot\text{h}$ | $69.8\%$ | $305.3\text{ psi}$ | **True** |
-| | PID Controller | $1190.9\text{ bbl}$ | $247.1\text{ bbl}\cdot\text{h}$ | $118.9\%$ | $305.3\text{ psi}$ | **True** |
-| | **NMPC** | $1204.7\text{ bbl}$ | **$233.4\text{ bbl}\cdot\text{h}$** | **$69.3\%$** | $305.4\text{ psi}$ | **True** |
-| | **RL (Actor-Critic)** | **$1223.8\text{ bbl}$** | $235.7\text{ bbl}\cdot\text{h}$ | $69.7\%$ | $305.3\text{ psi}$ | **True** |
-| **Scenario B** | Fixed Choke (30%) | $912.7\text{ bbl}$ | $525.3\text{ bbl}\cdot\text{h}$ | $0.0\%$ | $294.2\text{ psi}$ | **True** |
-| *(Separator Surges)*| Rule-Based | $1168.6\text{ bbl}$ | $285.1\text{ bbl}\cdot\text{h}$ | $131.9\%$ | $305.3\text{ psi}$ | **True** |
-| | PID Controller | $1144.5\text{ bbl}$ | $293.9\text{ bbl}\cdot\text{h}$ | $163.2\%$ | $305.3\text{ psi}$ | **True** |
-| | **NMPC** | $1168.2\text{ bbl}$ | **$286.9\text{ bbl}\cdot\text{h}$** | $138.0\%$ | $305.4\text{ psi}$ | **True** |
-| | **RL (Actor-Critic)** | **$1181.6\text{ bbl}$** | $291.7\text{ bbl}\cdot\text{h}$ | **$69.7\%$** | $305.3\text{ psi}$ | **True** |
+| **Scenario A** | Fixed Choke (30%) | $945.1\text{ bbl}$ | $493.0\text{ bbl}\cdot\text{h}$ | $0.0\%$ | $305.2\text{ psi}$ | True |
+| *(Step Setpoints)* | Rule-Based | $1203.4\text{ bbl}$ | $234.7\text{ bbl}\cdot\text{h}$ | $69.8\%$ | $305.3\text{ psi}$ | True |
+| | PID Controller | $1190.9\text{ bbl}$ | $247.1\text{ bbl}\cdot\text{h}$ | $118.9\%$ | $305.3\text{ psi}$ | True |
+| | **NMPC** | $1204.7\text{ bbl}$ | **$233.4\text{ bbl}\cdot\text{h}$** | **$69.3\%$** | $305.4\text{ psi}$ | True |
+| | **RL (Actor-Critic)** | **$1223.8\text{ bbl}$** | $235.7\text{ bbl}\cdot\text{h}$ | $69.7\%$ | $305.3\text{ psi}$ | True |
+| **Scenario B** | Fixed Choke (30%) | $912.7\text{ bbl}$ | $525.3\text{ bbl}\cdot\text{h}$ | $0.0\%$ | $294.2\text{ psi}$ | True |
+| *(Separator Surges)*| Rule-Based | $1168.6\text{ bbl}$ | $285.1\text{ bbl}\cdot\text{h}$ | $131.9\%$ | $305.3\text{ psi}$ | True |
+| | PID Controller | $1144.5\text{ bbl}$ | $293.9\text{ bbl}\cdot\text{h}$ | $163.2\%$ | $305.3\text{ psi}$ | True |
+| | **NMPC** | $1168.2\text{ bbl}$ | **$286.9\text{ bbl}\cdot\text{h}$** | $138.0\%$ | $305.4\text{ psi}$ | True |
+| | **RL (Actor-Critic)** | **$1181.6\text{ bbl}$** | $291.7\text{ bbl}\cdot\text{h}$ | **$69.7\%$** | $305.3\text{ psi}$ | True |
 
 ---
 
-## ⚡ Computational Latency & Speed Benchmark
+## Computational Latency & Speed Benchmark
 
 | Controller | Mean Decision Latency ($\text{ms/step}$) | Max Latency ($\text{ms}$) | Field PLC Compliance |
 | :--- | :---: | :---: | :--- |
-| **Rule-Based** | $0.0007 \pm 0.0003\text{ ms}$ | $0.0057\text{ ms}$ | ✅ Instantaneous |
-| **PID** | $0.0010 \pm 0.0002\text{ ms}$ | $0.0068\text{ ms}$ | ✅ Instantaneous |
-| **RL Agent** | $0.0198 \pm 0.0039\text{ ms}$ | $0.0868\text{ ms}$ | ✅ Sub-millisecond Neural Net |
-| **NMPC** | $0.1551 \pm 1.1805\text{ ms}$ | $10.8322\text{ ms}$ | ✅ Real-time ($< 15\text{ ms}$) |
+| **Rule-Based** | $0.0007 \pm 0.0003\text{ ms}$ | $0.0057\text{ ms}$ | Instantaneous |
+| **PID** | $0.0010 \pm 0.0002\text{ ms}$ | $0.0068\text{ ms}$ | Instantaneous |
+| **RL Agent** | $0.0198 \pm 0.0039\text{ ms}$ | $0.0868\text{ ms}$ | Sub-millisecond Neural Net |
+| **NMPC** | $0.1551 \pm 1.1805\text{ ms}$ | $10.8322\text{ ms}$ | Real-time ($< 15\text{ ms}$) |
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```text
 .
@@ -148,10 +147,10 @@ Evaluation across 12-hour simulation horizons ($dt = 5.0\text{s}$, $8,640\text{ 
 │   ├── rl_controller.py           # Trained Policy RL Controller Wrapper
 │   └── gym_env.py                 # Gymnasium Compatible Environment
 ├── docs/
-│   └── API_DOCUMENTATION.md       # Full API Documentation & Class Methods
+│   └── API_DOCUMENTATION.md       # API Documentation & Class Methods
 ├── models/
 │   └── rl_choke_policy.npz        # Trained Actor-Critic policy weights
-├── plots/                         # High-resolution benchmark & trajectory figures
+├── plots/                         # Generated figures and charts
 ├── simulator/                     # Physics engine sub-package
 │   ├── simulation.py              # Simulator core & coupled solver
 │   ├── reservoir.py               # Reservoir IPR & material balance
@@ -160,10 +159,14 @@ Evaluation across 12-hour simulation horizons ($dt = 5.0\text{s}$, $8,640\text{ 
 │   ├── surface.py                 # Surface backpressure dynamics
 │   ├── state.py                   # WellState dataclass
 │   └── config.py                  # Dataclass configurations
-├── dashboard/                     # Real-time dashboard
-│   ├── dashboard.py               # Main dashboard script
+├── dashboard/                     # Web & Matplotlib dashboards
+│   ├── static/                    # Frontend HTML, CSS, JS assets
+│   ├── server.py                  # Python web dashboard server
+│   ├── dashboard_mpl.py           # Matplotlib backup dashboard
 │   └── README.md                  # Dashboard documentation
-├── TECHNICAL_REPORT.md            # Mathematical physics specification & report
+├── DASHBOARD.md                   # Web dashboard documentation
+├── TECHNICAL_REPORT.md            # Mathematical physics specification
+├── run_dashboard.py               # Launcher script for web & matplotlib dashboards
 ├── validate_and_plot.py           # Calibration against reference dataset
 ├── run_trajectory_analysis.py     # Trajectory overlay & constraint audit
 ├── train_rl.py                    # RL Actor-Critic policy training script
@@ -176,67 +179,44 @@ Evaluation across 12-hour simulation horizons ($dt = 5.0\text{s}$, $8,640\text{ 
 
 ---
 
-## 📊 Real-time Dashboard
+## Real-Time Interactive Web Dashboard
 
-An interactive real-time dashboard for visualizing the choke control simulation is available in the `dashboard/` directory. The dashboard uses graphical controls to adjust simulation parameters, eliminating the need for command-line arguments.
+An interactive single-screen web dashboard is available for real-time visualization and multi-scenario analysis.
 
-### Features
-
-- Interactive controller selection via radio buttons (Fixed, Rule-Based, PID, MPC, RL)
-- Adjustable parameters through text boxes: duration, time step, target oil rate, minimum wellhead pressure, update interval
-- Start/Stop buttons to control simulation execution
-- Real-time plots of:
-  - Choke opening (%)
-  - Oil rate (bbl/hr) with target reference line
-  - Wellhead pressure (psi) with safety limit line
-  - Bottom hole pressure (psi)
-  - Reservoir pressure (bar)
-  - Choke command (%)
-- Live statistics display showing current values
-- Dynamic axis scaling that adapts to data ranges
-- Support for all five control strategies
-
-### Usage
-
-Run the dashboard from the project root:
+### Running the Web Dashboard
 
 ```bash
-python3 dashboard/dashboard.py
+python3 run_dashboard.py
 ```
 
-### Controls
+This launches the web server on `http://localhost:8050` with:
+- Left-side control panel for controller selection, playback controls, target oil rate, and minimum WHP safety limit.
+- 2D animated wellbore schematic depicting downhole perforations, fluid movement, and real-time physical choke opening.
+- 4 real-time line charts fitting entirely within the screen viewport without scrolling.
+- Page 2 Monte Carlo & Scenario testing studio for evaluating parameter uncertainty, ablation dynamics, and controller decision latencies.
 
-1. **Controller Selection**: Use the radio buttons to choose between Fixed, Rule-Based, PID, MPC, or RL controllers.
-2. **Parameters**: Set the desired values using the text boxes:
-   - **Duration (s)**: Total simulation time
-   - **dt (s)**: Time step size
-   - **Target Oil (bbl/hr)**: Desired oil production rate
-   - **Min WHP (psi)**: Minimum allowed wellhead pressure (safety constraint)
-   - **Update Interval**: Number of simulation steps between plot updates (higher = better performance, less smooth)
-3. **Start Simulation**: Click the "Start Simulation" button to begin.
-4. **Stop Simulation**: Click the "Stop" button to halt the simulation at any time.
-5. **Adjust During Operation**: You can modify most parameters while the simulation is running; changes take effect after you restart the script.
+### Matplotlib Backup Dashboard
 
-### Example Workflow
+To run the Matplotlib dashboard version:
 
-1. Launch the dashboard with the command above.
-2. Select "RL" as the controller.
-3. Set Duration to 7200 (2 hours), dt to 5.0, Target Oil to 120, and Min WHP to 210.
-4. Click "Start Simulation".
-5. Observe the real-time updates as the RL controller learns to control the choke.
-6. Experiment with different controllers and parameters to compare performance.
+```bash
+python3 run_dashboard.py --mpl
+# or
+python3 dashboard/dashboard_mpl.py
+```
 
-See the [dashboard README](dashboard/README.md) for more details.
+See [DASHBOARD.md](DASHBOARD.md) for further configuration details.
 
 ---
 
-## 📄 Documentation
+## Documentation
 
-- **Mathematical Specification & Technical Report**: See [TECHNICAL_REPORT.md](file:///media/windows_drive/Choke_controller/TECHNICAL_REPORT.md)
-- **API Reference**: See [docs/API_DOCUMENTATION.md](file:///media/windows_drive/Choke_controller/docs/API_DOCUMENTATION.md)
+- **Technical Report**: See [TECHNICAL_REPORT.md](TECHNICAL_REPORT.md)
+- **API Reference**: See [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)
+- **Dashboard Reference**: See [DASHBOARD.md](DASHBOARD.md)
 
 ---
 
-## 📜 License
+## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
